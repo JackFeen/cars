@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2016 Honda Fit LX</title>
+<script src="https://cdn.jsdelivr.net/npm/plotly.js-dist@2.27.0/plotly.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 14px;
+    color: #222;
+    background: #fff;
+    padding: 32px 40px 60px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .subtitle {
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 28px;
+  }
+
+  .legend-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: #666;
+    flex-wrap: wrap;
+  }
+
+  .legend-gradient {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .swatch {
+    width: 72px;
+    height: 8px;
+    border-radius: 2px;
+    background: linear-gradient(to right, #4a90d9, #e8a838, #c0392b);
+  }
+
+  .ref-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .dash {
+    width: 20px;
+    border-top: 2px dashed;
+  }
+
+  .dash-miles { border-color: #aaa; }
+  .dash-year  { border-color: #4a90d9; }
+
+  #chart { width: 100%; height: 480px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 36px;
+    font-size: 13px;
+  }
+
+  th {
+    text-align: left;
+    padding: 8px 12px;
+    font-weight: 500;
+    color: #666;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 12px;
+  }
+
+  td {
+    padding: 9px 12px;
+    border-bottom: 1px solid #f0f0f0;
+    color: #222;
+  }
+
+  tbody tr { cursor: pointer; }
+  tbody tr:hover td { background: #f7f7f7; }
+  tbody tr:last-child td { border-bottom: none; }
+
+  .note { color: #999; font-style: italic; }
+  .go { color: #ccc; font-size: 12px; }
+  tbody tr:hover .go { color: #4a90d9; }
+</style>
+</head>
+<body>
+
+<h1>2016 Honda Fit LX</h1>
+<p class="subtitle">21 listings · click any dot or row to open listing</p>
+
+<div class="legend-row">
+  <div class="legend-gradient">
+    <span>cheaper</span>
+    <div class="swatch"></div>
+    <span>pricier</span>
+  </div>
+  <div class="ref-item"><div class="dash dash-miles"></div><span>avg mileage (87,274)</span></div>
+  <div class="ref-item"><div class="dash dash-year"></div><span>year 2016</span></div>
+</div>
+
+<div id="chart"></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Source</th>
+      <th>Price</th>
+      <th>Miles</th>
+      <th>Year</th>
+      <th>Notes</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="tbody"></tbody>
+</table>
+
+<script>
+const data = [
+  {source:"google",  price:14590, miles:92304,  year:2016, notes:"",                 link:"https://www.carvana.com/vehicle/3997539"},
+  {source:"carmax",  price:13599, miles:91000,  year:2016, notes:"reserved",         link:"https://www.carmax.com/car/28317709"},
+  {source:"carmax",  price:15998, miles:87000,  year:2016, notes:"",                 link:"https://www.carmax.com/car/28549598"},
+  {source:"carmax",  price:14998, miles:85000,  year:2016, notes:"reserved",         link:"https://www.carmax.com/car/28512511"},
+  {source:"carfax",  price:11900, miles:84515,  year:2016, notes:"",                 link:"https://www.carfax.com/vehicle/JHMGK5H5XGX011027"},
+  {source:"carmax",  price:15998, miles:80000,  year:2016, notes:"",                 link:"https://www.carmax.com/car/28053022"},
+  {source:"carmax",  price:15998, miles:80000,  year:2016, notes:"",                 link:"https://www.carmax.com/car/28484645"},
+  {source:"carvana", price:15990, miles:77639,  year:2016, notes:"",                 link:"https://www.carvana.com/vehicle/4265508"},
+  {source:"carvana", price:15990, miles:69985,  year:2016, notes:"",                 link:"https://www.carvana.com/vehicle/4257067"},
+  {source:"carvana", price:16990, miles:55000,  year:2017, notes:"",                 link:"https://www.carvana.com/vehicle/4209340"},
+  {source:"carmax",  price:16998, miles:55000,  year:2016, notes:"",                 link:"https://www.carmax.com/car/28462796"},
+  {source:"carmax",  price:16998, miles:44000,  year:2016, notes:"reserved",         link:"https://www.carmax.com/car/28514050"},
+  {source:"carmax",  price:16998, miles:42000,  year:2016, notes:"",                 link:"https://www.carmax.com/car/27863660"},
+  {source:"carmax",  price:14998, miles:39000,  year:2016, notes:"reserved",         link:"https://www.carmax.com/car/27944143"},
+  {source:"carvana", price:17990, miles:35000,  year:2015, notes:"",                 link:"https://www.carvana.com/vehicle/3999817"},
+  {source:"google",  price:18590, miles:33166,  year:2016, notes:"",                 link:"https://www.carvana.com/vehicle/4193447"},
+  {source:"carmax",  price:17998, miles:31000,  year:2016, notes:"",                 link:"https://www.carmax.com/car/27804092"},
+  {source:"carmax",  price:17998, miles:24000,  year:2016, notes:"reserved",         link:"https://www.carmax.com/car/28416790"},
+  {source:"google",  price:19998, miles:12000,  year:2016, notes:"",                 link:"https://www.carmax.com/car_spotlight/28053022"},
+  {source:"carmax",  price:13998, miles:111000, year:2016, notes:"reserved",         link:"https://www.carmax.com/car/28206190"},
+  {source:"google",  price:13590, miles:103569, year:2015, notes:"purchase pending", link:"https://www.carvana.com/vehicle/4226076"},
+];
+
+const minP = Math.min(...data.map(d => d.price));
+const maxP = Math.max(...data.map(d => d.price));
+
+function priceColor(p) {
+  const t = (p - minP) / (maxP - minP);
+  const stops = [[74,144,217],[232,168,56],[192,57,43]];
+  const idx = Math.min(Math.floor(t * (stops.length - 1)), stops.length - 2);
+  const u = t * (stops.length - 1) - idx;
+  const a = stops[idx], b = stops[idx + 1];
+  return `rgb(${Math.round(a[0]+(b[0]-a[0])*u)},${Math.round(a[1]+(b[1]-a[1])*u)},${Math.round(a[2]+(b[2]-a[2])*u)})`;
+}
+
+const jittered = data.map(d => ({ ...d, yj: d.year + (Math.random() * 0.2 - 0.1) }));
+
+Plotly.newPlot('chart', [{
+  type: 'scatter',
+  mode: 'markers',
+  x: jittered.map(d => d.miles),
+  y: jittered.map(d => d.yj),
+  text: jittered.map(d =>
+    `<b>$${d.price.toLocaleString()}</b><br>${d.miles.toLocaleString()} mi · ${d.year}<br><span style="color:#999">${d.source}</span>` +
+    (d.notes ? `<br><i style="color:#bbb">${d.notes}</i>` : '')
+  ),
+  hovertemplate: '%{text}<extra></extra>',
+  marker: {
+    size: 12,
+    color: data.map(d => priceColor(d.price)),
+    opacity: 0.85,
+    line: { width: 1, color: '#fff' }
+  },
+}], {
+  paper_bgcolor: '#fff',
+  plot_bgcolor: '#fff',
+  font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', size: 12, color: '#666' },
+  margin: { l: 52, r: 20, t: 12, b: 52 },
+  xaxis: {
+    title: { text: 'Miles', standoff: 10 },
+    range: [0, 122000],
+    dtick: 10000,
+    tickformat: ',d',
+    gridcolor: '#f0f0f0',
+    linecolor: '#ddd',
+    zerolinecolor: '#f0f0f0',
+    tickcolor: '#ccc',
+  },
+  yaxis: {
+    title: { text: 'Year', standoff: 8 },
+    range: [2014.3, 2017.7],
+    dtick: 1,
+    tickformat: 'd',
+    gridcolor: '#f0f0f0',
+    linecolor: '#ddd',
+    zerolinecolor: '#f0f0f0',
+    tickcolor: '#ccc',
+  },
+  shapes: [
+    { type:'line', x0:87274, x1:87274, y0:2014.3, y1:2017.7,
+      line:{ color:'#bbb', width:1.2, dash:'dot' } },
+    { type:'line', x0:0, x1:122000, y0:2016, y1:2016,
+      line:{ color:'#4a90d9', width:1.2, dash:'dot' } },
+  ],
+  annotations: [
+    { x:87274, y:2017.55, xanchor:'left', text:'avg mi', showarrow:false,
+      font:{ size:11, color:'#aaa' } },
+    { x:121500, y:2016, yanchor:'bottom', xanchor:'right', text:'2016', showarrow:false,
+      font:{ size:11, color:'#4a90d9' } },
+  ],
+  hoverlabel: {
+    bgcolor: '#fff',
+    bordercolor: '#ddd',
+    font: { size: 13, color: '#222' }
+  },
+  dragmode: false,
+}, { responsive: true, displayModeBar: false });
+
+document.getElementById('chart').on('plotly_click',   e  => window.open(data[e.points[0].pointIndex].link, '_blank'));
+document.getElementById('chart').on('plotly_hover',   ()  => document.getElementById('chart').style.cursor = 'pointer');
+document.getElementById('chart').on('plotly_unhover', ()  => document.getElementById('chart').style.cursor = 'default');
+
+const tbody = document.getElementById('tbody');
+[...data].sort((a, b) => a.miles - b.miles).forEach(d => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td>${d.source}</td>
+    <td style="color:${priceColor(d.price)};font-weight:500">$${d.price.toLocaleString()}</td>
+    <td>${d.miles.toLocaleString()}</td>
+    <td>${d.year}</td>
+    <td class="note">${d.notes}</td>
+    <td class="go">↗</td>
+  `;
+  tr.addEventListener('click', () => window.open(d.link, '_blank'));
+  tbody.appendChild(tr);
+});
+</script>
+</body>
+</html>
