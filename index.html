@@ -171,7 +171,7 @@ function priceColor(p) {
   return `rgb(${Math.round(a[0]+(b[0]-a[0])*u)},${Math.round(a[1]+(b[1]-a[1])*u)},${Math.round(a[2]+(b[2]-a[2])*u)})`;
 }
 
-const jittered = data.map(d => ({ ...d, yj: d.year + (Math.random() * 0.2 - 0.1) }));
+const jittered = data.map(d => ({ ...d, yj: d.year + (Math.random() * 0.1 - 0.05) }));
 
 Plotly.newPlot('chart', [{
   type: 'scatter',
